@@ -24,7 +24,7 @@ def rand_fuzzer(buf, numwrites):
         
 for i in xrange(num_tests):
     file_choice = random.choice(file_list)
-    app = random.choice(apps)
+    
     buf = bytearray(open(file_choice, 'rb').read())
 
     # start Charlie Miller code (modified)
@@ -33,13 +33,13 @@ for i in xrange(num_tests):
     # end Charlie Miller code (modified)
 
     open(fuzz_output, 'wb').write(buf)
-
-    print "Using app: %s orig_file: %s #writes=%d" % (app, file_choice, numwrites)
-    process = subprocess.Popen([app, fuzz_output])
-    
-    time.sleep(1)
-    crashed = process.poll()
-    if not crashed:
-        process.terminate()
-    else:
-        print "Crashed"
+    for app in apps:
+        print "Using app: %s orig_file: %s #writes=%d" % (app, file_choice, numwrites)
+        process = subprocess.Popen([app, fuzz_output])
+        
+        time.sleep(1)
+        crashed = process.poll()
+        if not crashed:
+            process.terminate()
+        else:
+            print "Crashed"
